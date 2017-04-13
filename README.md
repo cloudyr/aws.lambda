@@ -33,7 +33,8 @@ Temporary session tokens are stored in environment variable `AWS_SESSION_TOKEN` 
 
 The package is still under rapid development, but a simple and literal "Hello, world!" example can be found by doing the following:
 
-```{r}
+
+```r
 library("aws.lambda")
 
 # 'hello world!' example code
@@ -41,6 +42,20 @@ hello <- system.file("templates", "helloworld.js", package = "aws.lambda")
 
 # get IAM role for Lambda execution
 library("aws.iam")
+```
+
+```
+## 
+## Attaching package: 'aws.iam'
+```
+
+```
+## The following objects are masked from 'package:aws.lambda':
+## 
+##     create_alias, delete_alias, get_account, list_aliases
+```
+
+```r
 id <- get_caller_identity()[["Account"]]
 role <- paste0("arn:aws:iam::", id, ":role/lambda_basic_execution")
 
@@ -49,6 +64,10 @@ func <- create_function(name = "helloworld", func = hello,
 
 # invoke function
 invoke_function(func)
+```
+
+```
+## [1] "Hello, world!"
 ```
 
 Obviously this is a trivial lambda function, but the point is that basically anything (in node.js, python, or java) could be written into the "deployment package" and called in this way.

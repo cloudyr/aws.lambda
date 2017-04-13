@@ -1,6 +1,6 @@
 # CHANGES TO aws.lambda 0.1.2
 
-* Update.
+* Update code and documentation.
 
 # CHANGES TO aws.lambda 0.1.1
 

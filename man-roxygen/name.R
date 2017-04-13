@@ -1,0 +1,1 @@
+#' @param name A character string specifying the function name (either a full ARN or a max 64-character string). For functions other than \code{create_function} this can also be an object of class \dQuote{aws_lambda_function}.

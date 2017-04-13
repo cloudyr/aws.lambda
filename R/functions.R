@@ -1,65 +1,87 @@
-# http://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html
-create_function <- function(func, body, ...) {
-    act <- paste0("/functions")
-    r <- lambdaHTTP(verb = "POST", action = act, body = body, ...)
-    return(r)
-}
-
-update_function <- function(func, code, configuration, ...) {
-    if (!missing(code)) {
-        act <- paste0("/functions/", func, "/code")
-        r <- lambdaHTTP(verb = "PUT", action = act, body = code, ...)
-        return(r)
-    } else if (!missing(configuration)) {
-        act <- paste0("/functions/", func, "/configuration")
-        r <- lambdaHTTP(verb = "PUT", action = act, body = configuration, ...)
-        return(r)
-    } else {
-        stop("Must specify 'code' or 'configuration'")
+#' @rdname functions
+#' @title Function Management
+#' @description List functions, function versions, and function policies
+#' @template name
+#' @template qualifier
+#' @param marker A pagination marker from a previous request.
+#' @param n An integer specifying the number of results to return.
+#' @template dots
+#' @return An object of class \dQuote{aws_lambda_function}.
+#' @details \code{list_functions} lists all functions. \code{get_function} retrieves a specific function and \code{get_function_versions} retrieves all versions of that function. \code{get_function_configuration} returns the configuration details used when creating or updating the function. \code{delete_function} deletes a function, if you have permission to do so.
+#' @references
+#'  \href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunction.html}{API Reference: GetFunction}
+#'  \href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListVersionsByFunction.html}{API Reference: ListVersionsByFunction}
+#'  \href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListFunctions.html}{API Reference: ListFunctions}
+#'  \href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunctionConfiguration.html}{API Reference: GetFunctionConfiguration}
+#' @seealso \code{\link{create_function}}, \code{\link{update_function}}
+#' @export
+get_function <- function(name, qualifier, ...) {
+    name <- get_function_name(name)
+    act <- paste0("/2015-03-31/functions/", name)
+    query <- list()
+    if (!missing(qualifier)) {
+        query[["Qualifier"]] <- qualifier
     }
-}
-
-publish_function <- function(func, sha, desc, ...) {
-    act <- paste0("/functions/", func, "/versions")
-    b <- list(CodeSha256 = sha, Description = desc)
-    r <- lambdaHTTP(verb = "POST", action = act, body = b, ...)
-    return(r)
-}
-
-delete_function <- function(func, qualifier, ...) {
-    act <- paste0("/functions/", func, "/aliases/", name)
-    b <- list(Qualifier = qualifier)
-    r <- lambdaHTTP(verb = "DELETE", action = act, body = b, ...)
-    return(r)
-}
-
-get_function <- function(func, qualifier, ...) {
-    # Another endpoint just gets configuration: 
-    # http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunctionConfiguration.html
-    act <- paste0("/functions/", func)
-    b <- list(Qualifier = qualifier)
-    r <- lambdaHTTP(verb = "GET", action = act, body = b, ...)
-    return(r)
-}
-
-get_function_policy <- function(func, qualifier, ...) {
-    act <- paste0("/functions/", func, "/policy")
-    b <- list(Qualifier = qualifier)
-    r <- lambdaHTTP(verb = "GET", action = act, body = b, ...)
-    return(r)
-}
-
-
-list_functions <- function(func, name, vers, marker, n...) {
-    act <- paste0("/functions")
-    query <- list(Marker = marker, MaxItems = n)
     r <- lambdaHTTP(verb = "GET", action = act, query = query, ...)
-    return(r)
+    structure(c(r[["Configuration"]], list(Code = r[["Code"]], Tags = r[["Tags"]])),
+              class = "aws_lambda_function")
 }
 
-list_function_versions <- function(func, marker, n...) {
-    act <- paste0("/functions/", func, "/versions")
-    query <- list(Marker = marker, MaxItems = n)
+#' @rdname functions
+#' @export
+list_functions <- function(marker, n, ...) {
+    act <- paste0("/2015-03-31/functions")
+    query <- list()
+    if (!missing(marker)) {
+        query[["Marker"]] <- marker
+    }
+    if (!missing(n)) {
+        query[["MaxItems"]] <- n
+    }
+    r <- lambdaHTTP(verb = "GET", action = act, query = query, ...)
+    structure(lapply(r[["Functions"]], `class<-`, "aws_lambda_function"),
+              marker = r[["NextMarker"]])
+}
+
+#' @rdname functions
+#' @export
+list_function_versions <- function(name, marker, n, ...) {
+    name <- get_function_name(name)
+    act <- paste0("/2015-03-31/functions/", name, "/versions")
+    query <- list()
+    if (!missing(marker)) {
+        query[["Marker"]] <- marker
+    }
+    if (!missing(n)) {
+        query[["MaxItems"]] <- n
+    }
+    r <- lambdaHTTP(verb = "GET", action = act, query = query, ...)
+    structure(lapply(r[["Versions"]], `class<-`, "aws_lambda_function"),
+              marker = r[["NextMarker"]])
+}
+
+#' @rdname functions
+#' @export
+delete_function <- function(name, qualifier, ...) {
+    name <- get_function_name(name)
+    act <- paste0("/2015-03-31/functions/", name, "/aliases/", name)
+    query <- list()
+    if (!missing(qualifier)) {
+        query[["Qualifier"]] <- qualifier
+    }
+    r <- lambdaHTTP(verb = "DELETE", action = act, query = query, ...)
+    return(TRUE)
+}
+
+#' @rdname functions
+#' @export
+get_function_policy <- function(name, qualifier, ...) {
+    name <- get_function_name(name)
+    act <- paste0("/2015-03-31/functions/", name, "/policy")
+    query <- list()
+    if (!missing(qualifier)) {
+        query[["Qualifier"]] <- qualifier
+    }
     r <- lambdaHTTP(verb = "GET", action = act, query = query, ...)
     return(r)
 }

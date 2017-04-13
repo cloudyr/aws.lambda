@@ -22,10 +22,9 @@ get_eventsource <- function(source, ...) {
     return(r)
 }
 
-list_eventsources <- function(stream, func, marker, n...) {
+list_eventsources <- function(stream, func, marker, n, ...) {
     act <- paste0("/event-source-mappings/")
     query <- list(EventSourceArn = stream, FunctionName = func, Marker = marker, MaxItems = n)
     r <- lambdaHTTP(verb = "GET", action = act, query = query, ...)
     return(r)
 }
-
