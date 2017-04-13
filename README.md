@@ -41,22 +41,8 @@ library("aws.lambda")
 hello <- system.file("templates", "helloworld.js", package = "aws.lambda")
 
 # get IAM role for Lambda execution
-library("aws.iam")
-```
-
-```
-## 
-## Attaching package: 'aws.iam'
-```
-
-```
-## The following objects are masked from 'package:aws.lambda':
-## 
-##     create_alias, delete_alias, get_account, list_aliases
-```
-
-```r
-id <- get_caller_identity()[["Account"]]
+requireNamespace("aws.iam")
+id <- aws.iam::get_caller_identity()[["Account"]]
 role <- paste0("arn:aws:iam::", id, ":role/lambda_basic_execution")
 
 func <- create_function(name = "helloworld", func = hello, 
