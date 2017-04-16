@@ -36,7 +36,7 @@
 #'   # delete function
 #'   delete_function(func)
 #' }
-#' @seealso \code{\link{invoke_function}}, \code{\link{create_alias}}, \code{\link{list_functions}}, \code{\link{delete_function}}
+#' @seealso \code{\link{invoke_function}}, \code{\link{create_function_alias}}, \code{\link{list_functions}}, \code{\link{delete_function}}
 #' @importFrom base64enc base64encode
 #' @importFrom utils zip
 #' @export
