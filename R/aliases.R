@@ -18,7 +18,7 @@
 #'  \href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListAliases.html}{API Reference: ListAliases}
 #' @seealso \code{\link{create_function}}, \code{\link{list_functions}}
 #' @export
-create_alias <- function(name, alias, description, version, ...) {
+create_function_alias <- function(name, alias, description, version, ...) {
     name <- get_function_name(name)
     act <- paste0("/2015-03-31/functions/", name, "/aliases")
     b <- list(Description = description, FunctionVersion = version, Name = alias)
@@ -28,7 +28,7 @@ create_alias <- function(name, alias, description, version, ...) {
 
 #' @rdname alias
 #' @export
-update_alias <- function(name, alias, description, version, ...) {
+update_function_alias <- function(name, alias, description, version, ...) {
     name <- get_function_name(name)
     act <- paste0("/2015-03-31/functions/", name, "/aliases/", alias)
     b <- list(Description = description, FunctionVersion = version)
@@ -38,7 +38,7 @@ update_alias <- function(name, alias, description, version, ...) {
 
 #' @rdname alias
 #' @export
-delete_alias <- function(name, alias, ...) {
+delete_function_alias <- function(name, alias, ...) {
     name <- get_function_name(name)
     act <- paste0("/2015-03-31/functions/", name, "/aliases/", alias)
     r <- lambdaHTTP(verb = "DELETE", action = act, ...)
@@ -47,7 +47,7 @@ delete_alias <- function(name, alias, ...) {
 
 #' @rdname alias
 #' @export
-get_alias <- function(name, alias, ...) {
+get_function_alias <- function(name, alias, ...) {
     name <- get_function_name(name)
     act <- paste0("/2015-03-31/functions/", name, "/aliases/", alias)
     r <- lambdaHTTP(verb = "GET", action = act, ...)
@@ -56,7 +56,7 @@ get_alias <- function(name, alias, ...) {
 
 #' @rdname alias
 #' @export
-list_aliases <- function(name, version, marker, n, ...) {
+list_function_aliases <- function(name, version, marker, n, ...) {
     name <- get_function_name(name)
     act <- paste0("/2015-03-31/functions/", name, "/aliases")
     query <- list(FunctionVersion = version, Marker = marker, MaxItems = n)
