@@ -1,4 +1,4 @@
-# AWS Lambda Client Package #
+# AWS Lambda Client Package
 
 **aws.lambda** is a simple client package for the [Amazon Web Services (AWS) Lambda API](https://aws.amazon.com/lambda/).
 
@@ -29,12 +29,15 @@ Temporary session tokens are stored in environment variable `AWS_SESSION_TOKEN` 
 
 
 
-## Code Examples ##
+## Code Examples
 
 The package is still under rapid development, but a simple and literal "Hello, world!" example can be found by doing the following:
 
 ```{r}
 library("aws.lambda")
+
+# get list of all current functions
+funclist <- sapply(list_functions(), get_function_name)
 
 # 'hello world!' example code
 hello <- system.file("templates", "helloworld.js", package = "aws.lambda")
@@ -44,16 +47,52 @@ requireNamespace("aws.iam")
 id <- aws.iam::get_caller_identity()[["Account"]]
 role <- paste0("arn:aws:iam::", id, ":role/lambda_basic_execution")
 
-func <- create_function(name = "helloworld", func = hello, 
-                        handler = "helloworld.handler", role = role)
+if (!"helloworld" %in% funclist) {
+  func <- create_function(name = "helloworld", func = hello, 
+                          handler = "helloworld.handler", role = role)
+} else {
+  func <- get_function("helloworld")
+}
 
 # invoke function
 invoke_function(func)
 ```
 
+```{r, echo=FALSE, results="hide"}
+delete_function(func)
+```
+
 Obviously this is a trivial lambda function, but the point is that basically anything (in node.js, python, or java) could be written into the "deployment package" and called in this way.
 
-## Installation ##
+A sligtly more complex example shows how to pass arguments to the lambda function via the function's `payload` and examine the response.
+
+```{r}
+# example function that performs simple addition
+plus <- system.file("templates", "plus.js", package = "aws.lambda")
+
+# get IAM role for Lambda execution
+requireNamespace("aws.iam")
+id <- aws.iam::get_caller_identity()[["Account"]]
+role <- paste0("arn:aws:iam::", id, ":role/lambda_basic_execution")
+
+if (!"plus" %in% funclist) {
+  func <- create_function(name = "plus", func = plus, 
+                          handler = "plus.handler", role = role)
+} else {
+  func <- get_function("plus")
+}
+
+# invoke function
+invoke_function(func, payload = list(a = 2, b = 3))
+invoke_function(func, payload = list(a = -5, b = 7))
+```
+
+
+```{r, echo=FALSE, results="hide"}
+delete_function(func)
+```
+
+## Installation
 
 [![CRAN](http://www.r-pkg.org/badges/version/aws.lambda)](http://cran.r-project.org/package=aws.lambda)
 ![Downloads](https://cranlogs.r-pkg.org/badges/aws.lambda)

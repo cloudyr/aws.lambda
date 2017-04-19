@@ -1,0 +1,75 @@
+<h1 id="aws-lambda-client-package">AWS Lambda Client Package</h1>
+<p><strong>aws.lambda</strong> is a simple client package for the <a href="https://aws.amazon.com/lambda/">Amazon Web Services (AWS) Lambda API</a>.</p>
+<p>To use the package, you will need an AWS account and enter your credentials into R. Your keypair can be generated on the <a href="https://aws.amazon.com/">IAM Management Console</a> under the heading <em>Access Keys</em>. Note that you only have access to your secret key once. After it is generated, you need to save it in a secure location. New keypairs can be generated at any time if yours has been lost, stolen, or forgotten.</p>
+<p>By default, all <strong>cloudyr</strong> packages look for the access key ID and secret access key in environment variables. You can also use this to specify a default region or a temporary &quot;session token&quot;. For example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Sys.setenv</span>(<span class="st">&quot;AWS_ACCESS_KEY_ID&quot;</span> =<span class="st"> &quot;mykey&quot;</span>,
+           <span class="st">&quot;AWS_SECRET_ACCESS_KEY&quot;</span> =<span class="st"> &quot;mysecretkey&quot;</span>,
+           <span class="st">&quot;AWS_DEFAULT_REGION&quot;</span> =<span class="st"> &quot;us-east-1&quot;</span>,
+           <span class="st">&quot;AWS_SESSION_TOKEN&quot;</span> =<span class="st"> &quot;mytoken&quot;</span>)</code></pre></div>
+<p>These can alternatively be set on the command line prior to starting R or via an <code>Renviron.site</code> or <code>.Renviron</code> file, which are used to set environment variables in R during startup (see <code>? Startup</code>).</p>
+<p>If you work with multiple AWS accounts, another option that is consistent with other Amazon SDKs is to create <a href="https://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs">a centralized <code>~/.aws/credentials</code> file</a>, containing credentials for multiple accounts. You can then use credentials from this file on-the-fly by simply doing:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use your &#39;default&#39; account credentials</span>
+aws.signature::<span class="kw">use_credentials</span>()
+
+<span class="co"># use an alternative credentials profile</span>
+aws.signature::<span class="kw">use_credentials</span>(<span class="dt">profile =</span> <span class="st">&quot;bob&quot;</span>)</code></pre></div>
+<p>Temporary session tokens are stored in environment variable <code>AWS_SESSION_TOKEN</code> (and will be stored there by the <code>use_credentials()</code> function). The <a href="https://github.com/cloudyr/aws.iam/">aws.iam package</a> provides an R interface to IAM roles and the generation of temporary session tokens via the security token service (STS).</p>
+<h2 id="code-examples">Code Examples</h2>
+<p>The package is still under rapid development, but a simple and literal &quot;Hello, world!&quot; example can be found by doing the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;aws.lambda&quot;</span>)
+
+<span class="co"># get list of all current functions</span>
+funclist &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">list_functions</span>(), get_function_name)
+
+<span class="co"># &#39;hello world!&#39; example code</span>
+hello &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;templates&quot;</span>, <span class="st">&quot;helloworld.js&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;aws.lambda&quot;</span>)
+
+<span class="co"># get IAM role for Lambda execution</span>
+<span class="kw">requireNamespace</span>(<span class="st">&quot;aws.iam&quot;</span>)</code></pre></div>
+<pre><code>## Loading required namespace: aws.iam</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id &lt;-<span class="st"> </span>aws.iam::<span class="kw">get_caller_identity</span>()[[<span class="st">&quot;Account&quot;</span>]]
+role &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;arn:aws:iam::&quot;</span>, id, <span class="st">&quot;:role/lambda_basic_execution&quot;</span>)
+
+if (!<span class="st">&quot;helloworld&quot;</span> %in%<span class="st"> </span>funclist) {
+  func &lt;-<span class="st"> </span><span class="kw">create_function</span>(<span class="dt">name =</span> <span class="st">&quot;helloworld&quot;</span>, <span class="dt">func =</span> hello, 
+                          <span class="dt">handler =</span> <span class="st">&quot;helloworld.handler&quot;</span>, <span class="dt">role =</span> role)
+} else {
+  func &lt;-<span class="st"> </span><span class="kw">get_function</span>(<span class="st">&quot;helloworld&quot;</span>)
+}
+
+<span class="co"># invoke function</span>
+<span class="kw">invoke_function</span>(func)</code></pre></div>
+<pre><code>## [1] &quot;Hello, world!&quot;</code></pre>
+<p>Obviously this is a trivial lambda function, but the point is that basically anything (in node.js, python, or java) could be written into the &quot;deployment package&quot; and called in this way. A sligtly more complex example shows how to pass arguments to the lambda function and examine the response.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># example function that performs addition</span>
+plus &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;templates&quot;</span>, <span class="st">&quot;plus.js&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;aws.lambda&quot;</span>)
+
+<span class="co"># get IAM role for Lambda execution</span>
+<span class="kw">requireNamespace</span>(<span class="st">&quot;aws.iam&quot;</span>)
+id &lt;-<span class="st"> </span>aws.iam::<span class="kw">get_caller_identity</span>()[[<span class="st">&quot;Account&quot;</span>]]
+role &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;arn:aws:iam::&quot;</span>, id, <span class="st">&quot;:role/lambda_basic_execution&quot;</span>)
+
+if (!<span class="st">&quot;plus&quot;</span> %in%<span class="st"> </span>funclist) {
+  func &lt;-<span class="st"> </span><span class="kw">create_function</span>(<span class="dt">name =</span> <span class="st">&quot;plus&quot;</span>, <span class="dt">func =</span> plus, 
+                          <span class="dt">handler =</span> <span class="st">&quot;plus.handler&quot;</span>, <span class="dt">role =</span> role)
+} else {
+  func &lt;-<span class="st"> </span><span class="kw">get_function</span>(<span class="st">&quot;plus&quot;</span>)
+}
+
+<span class="co"># invoke function</span>
+<span class="kw">invoke_function</span>(func, <span class="dt">payload =</span> <span class="kw">list</span>(<span class="dt">a =</span> <span class="dv">2</span>, <span class="dt">b =</span> <span class="dv">3</span>))</code></pre></div>
+<pre><code>## [1] 5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">invoke_function</span>(func, <span class="dt">payload =</span> <span class="kw">list</span>(<span class="dt">a =</span> -<span class="dv">5</span>, <span class="dt">b =</span> <span class="dv">7</span>))</code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<h2 id="installation">Installation</h2>
+<p><a href="http://cran.r-project.org/package=aws.lambda"><embed src="http://www.r-pkg.org/badges/version/aws.lambda" /></a> <embed src="https://cranlogs.r-pkg.org/badges/aws.lambda" /> <a href="https://travis-ci.org/cloudyr/aws.lambda"><img src="https://travis-ci.org/cloudyr/aws.lambda.png?branch=master" alt="Build Status" /></a> <a href="http://codecov.io/github/cloudyr/aws.lambda?branch=master"><img src="http://codecov.io/github/cloudyr/aws.lambda/coverage.svg?branch=master" alt="codecov.io" /></a></p>
+<p>This package is not yet on CRAN. To install the latest development version you can install from the cloudyr drat repository:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># latest stable version</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;aws.s3&quot;</span>, <span class="dt">repos =</span> <span class="kw">c</span>(<span class="st">&quot;cloudyr&quot;</span> =<span class="st"> &quot;http://cloudyr.github.io/drat&quot;</span>))</code></pre></div>
+<p>To install the latest development version from GitHub, run the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if (!<span class="kw">require</span>(<span class="st">&quot;ghit&quot;</span>)){
+    <span class="kw">install.packages</span>(<span class="st">&quot;ghit&quot;</span>)
+}
+ghit::<span class="kw">install_github</span>(<span class="st">&quot;cloudyr/aws.lambda&quot;</span>)</code></pre></div>
+<hr />
+<p><a href="https://github.com/cloudyr"><img src="http://i.imgur.com/JHS98Y7.png" alt="cloudyr project logo" /></a></p>

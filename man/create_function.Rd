@@ -21,11 +21,11 @@ make_function_version(name, description, ...)
 
 \item{description}{Optionally, a max 256-character description of the function for your own use.}
 
-\item{func}{Either (1) a character string containing AWS S3 bucket and object key (e.g., \code{"s3://bucketname/objectkey"}) where the object is the .zip file containing the AWS Lambda deployment package; or (2) a file string pointing to a .zip containing the deployment package.}
+\item{func}{Either (1) a character string containing a url-style AWS S3 bucket and object key (e.g., \code{"s3://bucketname/objectkey"}) where the object is the .zip file containing the AWS Lambda deployment package; (2) a file string pointing to a .zip containing the deployment package; or (3) a single file (e.g., a javascript file) that will be zipped and used as the deployment. The third option is merely a convenience for very simple deployment packages.}
 
 \item{handler}{A character string specifying the function within your code that Lambda calls to begin execution.}
 
-\item{role}{A character string containing an IAM role or an object of class \dQuote{iam_role}.}
+\item{role}{A character string containing an IAM role or an object of class \dQuote{iam_role}. This is the role that is used when the function is invoked, so it must have permissions over any AWS resources needed by the function.}
 
 \item{runtime}{A character string specifying the runtime environment for the function.}
 
@@ -69,5 +69,5 @@ Create, update, and version AWS Lambda functions
  \href{http://docs.aws.amazon.com/lambda/latest/dg/API_PublishFunction.html}{API Reference: PublishFunction}
 }
 \seealso{
-\code{\link{invoke_function}}, \code{\link{create_alias}}, \code{\link{list_functions}}, \code{\link{delete_function}}
+\code{\link{invoke_function}}, \code{\link{create_function_alias}}, \code{\link{list_functions}}, \code{\link{delete_function}}
 }

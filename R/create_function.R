@@ -1,11 +1,11 @@
 #' @rdname create_function
 #' @title Manage AWS Lambda Functions
 #' @description Create, update, and version AWS Lambda functions
-#' @param func Either (1) a character string containing AWS S3 bucket and object key (e.g., \code{"s3://bucketname/objectkey"}) where the object is the .zip file containing the AWS Lambda deployment package; or (2) a file string pointing to a .zip containing the deployment package.
+#' @param func Either (1) a character string containing a url-style AWS S3 bucket and object key (e.g., \code{"s3://bucketname/objectkey"}) where the object is the .zip file containing the AWS Lambda deployment package; (2) a file string pointing to a .zip containing the deployment package; or (3) a single file (e.g., a javascript file) that will be zipped and used as the deployment. The third option is merely a convenience for very simple deployment packages.
 #' @template name
 #' @param description Optionally, a max 256-character description of the function for your own use.
 #' @param handler A character string specifying the function within your code that Lambda calls to begin execution.
-#' @param role A character string containing an IAM role or an object of class \dQuote{iam_role}.
+#' @param role A character string containing an IAM role or an object of class \dQuote{iam_role}. This is the role that is used when the function is invoked, so it must have permissions over any AWS resources needed by the function.
 #' @param runtime A character string specifying the runtime environment for the function.
 #' @param timeout An integer specifying the timeout for the function, in seconds.
 #' @template dots

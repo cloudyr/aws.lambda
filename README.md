@@ -37,16 +37,30 @@ The package is still under rapid development, but a simple and literal "Hello, w
 ```r
 library("aws.lambda")
 
+# get list of all current functions
+funclist <- sapply(list_functions(), get_function_name)
+
 # 'hello world!' example code
 hello <- system.file("templates", "helloworld.js", package = "aws.lambda")
 
 # get IAM role for Lambda execution
 requireNamespace("aws.iam")
+```
+
+```
+## Loading required namespace: aws.iam
+```
+
+```r
 id <- aws.iam::get_caller_identity()[["Account"]]
 role <- paste0("arn:aws:iam::", id, ":role/lambda_basic_execution")
 
-func <- create_function(name = "helloworld", func = hello, 
-                        handler = "helloworld.handler", role = role)
+if (!"helloworld" %in% funclist) {
+  func <- create_function(name = "helloworld", func = hello, 
+                          handler = "helloworld.handler", role = role)
+} else {
+  func <- get_function("helloworld")
+}
 
 # invoke function
 invoke_function(func)
@@ -56,7 +70,45 @@ invoke_function(func)
 ## [1] "Hello, world!"
 ```
 
-Obviously this is a trivial lambda function, but the point is that basically anything (in node.js, python, or java) could be written into the "deployment package" and called in this way.
+
+
+Obviously this is a trivial lambda function, but the point is that basically anything (in node.js, python, or java) could be written into the "deployment package" and called in this way. A sligtly more complex example shows how to pass arguments to the lambda function and examine the response.
+
+
+```r
+# example function that performs addition
+plus <- system.file("templates", "plus.js", package = "aws.lambda")
+
+# get IAM role for Lambda execution
+requireNamespace("aws.iam")
+id <- aws.iam::get_caller_identity()[["Account"]]
+role <- paste0("arn:aws:iam::", id, ":role/lambda_basic_execution")
+
+if (!"plus" %in% funclist) {
+  func <- create_function(name = "plus", func = plus, 
+                          handler = "plus.handler", role = role)
+} else {
+  func <- get_function("plus")
+}
+
+# invoke function
+invoke_function(func, payload = list(a = 2, b = 3))
+```
+
+```
+## [1] 5
+```
+
+```r
+invoke_function(func, payload = list(a = -5, b = 7))
+```
+
+```
+## [1] 2
+```
+
+
+
 
 ## Installation ##
 
