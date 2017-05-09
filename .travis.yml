@@ -6,7 +6,6 @@ r_packages:
 - covr
 - drat
 r_github_packages:
-- cloudyr/aws.s3
 - cloudyr/aws.iam
 after_success:
 - Rscript -e 'library("covr");codecov()'
@@ -14,4 +13,4 @@ after_success:
   drat.sh
 env:
   global:
-    secure: Fj8tdp+ItdB/jKifZ0HVRN/f71jx4ByVPWAdzIjeMh8nOdyFwR1+/KK7BmRD1jW78o+YZM+L//IFVztapx4Zwg3OgPO5D3/Bd1pDIhu6U0uPZxs67TJ1yO+mZnU6PrmgUaTRSrrdo31y8h9SZgKvojxW9ndls5gZinrx/TWsNDI=
+    secure: AXqHFBcuu6L6GqrtxICv1RyReoGs/4yCq6D7yXjZYUI4xJ0bYjB4vnmIn6hH1yt+xGqIOI5ApZfkeOLE7QkA9vrB51SBMvBi+sgLLuuItwywh4RHgV6Fwaa0bX4hiGgYnubvAvVD7psUZRcJvFpTEq2G3g99HDtbE5vx7/H4x/k=
