@@ -5,10 +5,8 @@
 \title{Execute AWS Lambda API Request}
 \usage{
 lambdaHTTP(verb = "GET", action, body = NULL, query = list(),
-  headers = list(), region = Sys.getenv("AWS_DEFAULT_REGION"),
-  key = Sys.getenv("AWS_ACCESS_KEY_ID"),
-  secret = Sys.getenv("AWS_SECRET_ACCESS_KEY"),
-  session_token = Sys.getenv("AWS_SESSION_TOKEN"), ...)
+  headers = list(), region = Sys.getenv("AWS_DEFAULT_REGION", "us-east-1"),
+  key = NULL, secret = NULL, session_token = NULL, ...)
 }
 \arguments{
 \item{verb}{A character string specifying the HTTP verb to use.}
@@ -23,11 +21,11 @@ lambdaHTTP(verb = "GET", action, body = NULL, query = list(),
 
 \item{region}{A character string containing an AWS region. If missing, the default \dQuote{us-east-1} is used.}
 
-\item{key}{A character string containing an AWS Access Key ID. The default is pulled from environment variable \dQuote{AWS_ACCESS_KEY_ID}.}
+\item{key}{A character string containing an AWS Access Key ID. See \code{\link[aws.signature]{locate_credentials}}.}
 
-\item{secret}{A character string containing an AWS Secret Access Key. The default is pulled from environment variable \dQuote{AWS_SECRET_ACCESS_KEY}.}
+\item{secret}{A character string containing an AWS Secret Access Key. See \code{\link[aws.signature]{locate_credentials}}.}
 
-\item{session_token}{Optionally, a character string containing an AWS temporary Session Token. If missing, defaults to value stored in environment variable \dQuote{AWS_SESSION_TOKEN}.}
+\item{session_token}{Optionally, a character string containing an AWS temporary Session Token. See \code{\link[aws.signature]{locate_credentials}}.}
 
 \item{\dots}{Additional arguments passed to \code{\link[httr]{GET}} or another httr request function.}
 }

@@ -1,3 +1,7 @@
+# CHANGES TO aws.lambda 0.1.4
+
+* Bump **aws.signature** dependency to 0.3.4.
+
 # CHANGES TO aws.lambda 0.1.3
 
 * Rename alias-related functions to avoid namespace clash with aws.iam.
