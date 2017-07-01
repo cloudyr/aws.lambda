@@ -1,7 +1,7 @@
 Package: aws.lambda
 Type: Package
 Title: AWS Lambda Client Package
-Version: 0.1.5
+Version: 0.1.6
 Date: 2017-07-01
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))

@@ -39,7 +39,7 @@ This is the workhorse function to execute calls to the Lambda API.
 This function constructs and signs an AWS Lambda API request and returns the results thereof, or relevant debugging information in the case of error.
 }
 \seealso{
-\code{\link{get_account}}, which works well as a hello world for the package
+\code{\link{get_lambda_account}}, which works well as a hello world for the package
 }
 \author{
 Thomas J. Leeper

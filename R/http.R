@@ -13,7 +13,7 @@
 #' @return If successful, a named list. Otherwise, a data structure of class \dQuote{aws-error} containing any error message(s) from AWS and information about the request attempt.
 #' @details This function constructs and signs an AWS Lambda API request and returns the results thereof, or relevant debugging information in the case of error.
 #' @author Thomas J. Leeper
-#' @seealso \code{\link{get_account}}, which works well as a hello world for the package
+#' @seealso \code{\link{get_lambda_account}}, which works well as a hello world for the package
 #' @import httr
 #' @importFrom utils str
 #' @importFrom jsonlite fromJSON toJSON

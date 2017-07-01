@@ -1,3 +1,7 @@
+# CHANGES TO aws.lambda 0.1.6
+
+* Change `get_account()` to `get_lambda_account()` to avoid namespace conflict with **aws.iam.**
+
 # CHANGES TO aws.lambda 0.1.4
 
 * Bump **aws.signature** dependency to 0.3.4.
