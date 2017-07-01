@@ -96,10 +96,10 @@ delete_function(func)
 
 ## Installation
 
-[![CRAN](http://www.r-pkg.org/badges/version/aws.lambda)](http://cran.r-project.org/package=aws.lambda)
+[![CRAN](https://www.r-pkg.org/badges/version/aws.lambda)](https://cran.r-project.org/package=aws.lambda)
 ![Downloads](https://cranlogs.r-pkg.org/badges/aws.lambda)
 [![Build Status](https://travis-ci.org/cloudyr/aws.lambda.png?branch=master)](https://travis-ci.org/cloudyr/aws.lambda) 
-[![codecov.io](http://codecov.io/github/cloudyr/aws.lambda/coverage.svg?branch=master)](http://codecov.io/github/cloudyr/aws.lambda?branch=master)
+[![codecov.io](https://codecov.io/github/cloudyr/aws.lambda/coverage.svg?branch=master)](https://codecov.io/github/cloudyr/aws.lambda?branch=master)
 
 This package is not yet on CRAN. To install the latest development version you can install from the cloudyr drat repository:
 
