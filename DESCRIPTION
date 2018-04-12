@@ -4,7 +4,8 @@ Title: AWS Lambda Client Package
 Version: 0.1.6
 Date: 2017-07-01
 Authors@R: c(person("Thomas J.", "Leeper", role = c("aut", "cre"),
-                    email = "thosjleeper@gmail.com"))
+                    email = "thosjleeper@gmail.com",
+                    comment = c(ORCID = "0000-0003-4097-6326")))
 Description: A simple client package for the Amazon Web Services ('AWS') Lambda 'API' <https://aws.amazon.com/lambda/>.
 License: GPL (>= 2)
 Imports: 
