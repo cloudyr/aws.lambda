@@ -18,9 +18,9 @@
 #' @import httr
 #' @importFrom utils str
 #' @importFrom jsonlite fromJSON toJSON
-#' @importFrom aws.signature signature_v4_auth
+#' @importFrom aws.signature signature_v4_auth locate_credentials
 #' @export
-lambdaHTTP <- 
+lambdaHTTP <-
 function(
   verb = "GET",
   action,
@@ -28,31 +28,31 @@ function(
   headers = list(),
   body = NULL,
   verbose = getOption("verbose", FALSE),
-  region = Sys.getenv("AWS_DEFAULT_REGION", "us-east-1"), 
-  key = NULL, 
-  secret = NULL, 
+  region = Sys.getenv("AWS_DEFAULT_REGION", "us-east-1"),
+  key = NULL,
+  secret = NULL,
   session_token = NULL,
   ...
 ) {
     # locate and validate credentials
-    credentials <- locate_credentials(key = key, secret = secret, session_token = session_token, region = region, verbose = verbose)
+    credentials <- aws.signature::locate_credentials(key = key, secret = secret, session_token = session_token, region = region, verbose = verbose)
     key <- credentials[["key"]]
     secret <- credentials[["secret"]]
     session_token <- credentials[["session_token"]]
     region <- credentials[["region"]]
-    
+
     # generate request signature
     d_timestamp <- format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC")
     url <- paste0("https://lambda.", region, ".amazonaws.com", action)
-    
-    if (length(body)) { 
+
+    if (length(body)) {
         if (is.list(body)) {
             body <- jsonlite::toJSON(body, auto_unbox = TRUE)
         }
     } else {
         body <- NULL
     }
-    
+
     headers[["host"]] <- paste0("lambda.",region,".amazonaws.com")
     headers[["x-amz-date"]] <- d_timestamp
     Sig <- signature_v4_auth(
@@ -74,7 +74,7 @@ function(
         headers[["x-amz-security-token"]] <- session_token
     }
     H <- do.call("add_headers", headers)
-    
+
     # execute request
     if (verb == "GET") {
         if (length(query)) {
@@ -116,8 +116,8 @@ function(
                 r <- POST(url, H, body = body, encode = "json", ...)
             }
         }
-    } 
-    
+    }
+
     if (http_error(r)) {
         h <- headers(r)
         content <- try(content(r, "parsed", encoding = "UTF-8"), silent = TRUE)
