@@ -4,8 +4,14 @@
 \alias{invoke_function}
 \title{Invoke Lambda Function}
 \usage{
-invoke_function(name, qualifier, payload = NULL, type = c("RequestResponse",
-  "Event", "DryRun"), log = c("None", "Tail"), ...)
+invoke_function(
+  name,
+  qualifier,
+  payload = NULL,
+  type = c("RequestResponse", "Event", "DryRun"),
+  log = c("None", "Tail"),
+  ...
+)
 }
 \arguments{
 \item{name}{A character string specifying the function name (either a full ARN or a max 64-character string). For functions other than \code{create_function} this can also be an object of class \dQuote{aws_lambda_function}.}

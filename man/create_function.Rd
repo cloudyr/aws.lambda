@@ -6,13 +6,29 @@
 \alias{make_function_version}
 \title{Manage AWS Lambda Functions}
 \usage{
-create_function(name, description = name, func, handler, role,
-  runtime = c("nodejs6.10", "nodejs4.3", "java8", "python2.7",
-  "dotnetcore1.0", "nodejs4.3-edge"), timeout = 3L, ...)
+create_function(
+  name,
+  description = name,
+  func,
+  handler,
+  role,
+  runtime = c("nodejs6.10", "nodejs4.3", "java8", "python2.7", "dotnetcore1.0",
+    "nodejs4.3-edge"),
+  timeout = 3L,
+  ...
+)
 
-update_function(name, func, description, handler, role,
-  runtime = c("nodejs6.10", "nodejs4.3", "java8", "python2.7",
-  "dotnetcore1.0", "nodejs4.3-edge"), timeout = 3L, ...)
+update_function(
+  name,
+  func,
+  description,
+  handler,
+  role,
+  runtime = c("nodejs6.10", "nodejs4.3", "java8", "python2.7", "dotnetcore1.0",
+    "nodejs4.3-edge"),
+  timeout = 3L,
+  ...
+)
 
 make_function_version(name, description, ...)
 }

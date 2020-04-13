@@ -4,10 +4,19 @@
 \alias{lambdaHTTP}
 \title{Execute AWS Lambda API Request}
 \usage{
-lambdaHTTP(verb = "GET", action, query = list(), headers = list(),
-  body = NULL, verbose = getOption("verbose", FALSE),
-  region = Sys.getenv("AWS_DEFAULT_REGION", "us-east-1"), key = NULL,
-  secret = NULL, session_token = NULL, ...)
+lambdaHTTP(
+  verb = "GET",
+  action,
+  query = list(),
+  headers = list(),
+  body = NULL,
+  verbose = getOption("verbose", FALSE),
+  region = Sys.getenv("AWS_DEFAULT_REGION", "us-east-1"),
+  key = NULL,
+  secret = NULL,
+  session_token = NULL,
+  ...
+)
 }
 \arguments{
 \item{verb}{A character string specifying the HTTP verb to use.}
