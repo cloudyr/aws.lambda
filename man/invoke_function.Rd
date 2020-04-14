@@ -18,9 +18,12 @@ invoke_function(
 
 \item{qualifier}{Optionally, either a function version or alias. If omitted, information about the latest version is returned.}
 
-\item{payload}{Optionally, the JSON body to send to the function.}
+\item{payload}{Optionally, a list of parameters to send in the JSON body to
+the function.}
 
-\item{type}{A character string specifying one of: (1) \dQuote{Event} (asynchronous execution), (2) \dQuote{RequestResponse} (the default), or (3) \dQuote{DryRun} to test the function without executing it.}
+\item{type}{A character string specifying one of: (1) \dQuote{Event}
+(asynchronous execution), (2) \dQuote{RequestResponse} (the default), or
+(3) \dQuote{DryRun} to test the function without executing it.}
 
 \item{log}{A character string to control log response.}
 

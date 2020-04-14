@@ -29,10 +29,10 @@
 #' @author Thomas J. Leeper
 #' @seealso \code{\link{get_lambda_account}}, which works well as a hello world
 #'   for the package
-#' @import httr
-#' @importFrom utils str
-#' @importFrom jsonlite fromJSON toJSON
-#' @importFrom aws.signature signature_v4_auth locate_credentials
+#' @importFrom httr GET DELETE PUT POST add_headers http_error headers
+#'   stop_for_status content
+#' @importFrom aws.signature locate_credentials signature_v4_auth
+#' @importFrom jsonlite toJSON
 #' @export
 lambdaHTTP <- function(verb = "GET",
                        action,
