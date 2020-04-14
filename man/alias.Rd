@@ -8,9 +8,9 @@
 \alias{list_function_aliases}
 \title{Alias Management}
 \usage{
-create_function_alias(name, alias, description, version, ...)
+create_function_alias(name, alias, version, description, ...)
 
-update_function_alias(name, alias, description, version, ...)
+update_function_alias(name, alias, version, description, ...)
 
 delete_function_alias(name, alias, ...)
 
@@ -23,9 +23,10 @@ list_function_aliases(name, version, marker, n, ...)
 
 \item{alias}{A character string specifying a function alias}
 
-\item{description}{Optionally, a max 256-character description of the function for your own use.}
-
 \item{version}{A character string specifying a function version}
+
+\item{description}{Optionally, a max 256-character description of the
+function for your own use.}
 
 \item{\dots}{Additional arguments passed to \code{\link{lambdaHTTP}}.}
 
@@ -40,14 +41,23 @@ An object of class \dQuote{aws_lambda_function}.
 List, create, update, and delete function aliases
 }
 \details{
-\code{list_functions} lists all functions. \code{get_function} retrieves a specific function and \code{get_function_versions} retrieves all versions of that function. \code{get_function_configuration} returns the configuration details used when creating or updating the function. \code{delete_function} deletes a function, if you have permission to do so.
+\code{list_functions} lists all functions. \code{get_function}
+  retrieves a specific function and \code{get_function_versions} retrieves
+  all versions of that function. \code{get_function_configuration} returns
+  the configuration details used when creating or updating the function.
+  \code{delete_function} deletes a function, if you have permission to do so.
 }
 \references{
-\href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetAlias.html}{API Reference: GetAlias}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_CreateAlias.html}{API Reference: CreateAlias}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_UpdateAlias.html}{API Reference: UpdateAlias}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_DeleteAlias.html}{API Reference: DeleteAlias}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListAliases.html}{API Reference: ListAliases}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetAlias.html}{API
+Reference: GetAlias}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_CreateAlias.html}{API
+Reference: CreateAlias}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_UpdateAlias.html}{API
+Reference: UpdateAlias}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_DeleteAlias.html}{API
+Reference: DeleteAlias}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListAliases.html}{API
+Reference: ListAliases}
 }
 \seealso{
 \code{\link{create_function}}, \code{\link{list_functions}}
