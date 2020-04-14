@@ -36,13 +36,21 @@ An object of class \dQuote{aws_lambda_function}.
 List functions, function versions, and function policies
 }
 \details{
-\code{list_functions} lists all functions. \code{get_function} retrieves a specific function and \code{get_function_versions} retrieves all versions of that function. \code{get_function_configuration} returns the configuration details used when creating or updating the function. \code{delete_function} deletes a function, if you have permission to do so.
+\code{list_functions} lists all functions. \code{get_function}
+  retrieves a specific function and \code{get_function_versions} retrieves
+  all versions of that function. \code{get_function_configuration} returns
+  the configuration details used when creating or updating the function.
+  \code{delete_function} deletes a function, if you have permission to do so.
 }
 \references{
-\href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunction.html}{API Reference: GetFunction}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListVersionsByFunction.html}{API Reference: ListVersionsByFunction}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListFunctions.html}{API Reference: ListFunctions}
- \href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunctionConfiguration.html}{API Reference: GetFunctionConfiguration}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunction.html}{API
+Reference: GetFunction}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListVersionsByFunction.html}{API
+Reference: ListVersionsByFunction}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_ListFunctions.html}{API
+Reference: ListFunctions}
+\href{http://docs.aws.amazon.com/lambda/latest/dg/API_GetFunctionConfiguration.html}{API
+Reference: GetFunctionConfiguration}
 }
 \seealso{
 \code{\link{create_function}}, \code{\link{update_function}}

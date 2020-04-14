@@ -1,5 +1,6 @@
 # aws.lambda 0.1.6.9000
 
+* Updated license to GPL-3.
 * New maintainer (@jonthegeek).
 
 # aws.lambda 0.1.6
