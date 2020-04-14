@@ -81,12 +81,11 @@ list_function_aliases <- function(name, version, marker, n, ...) {
   act <- paste0("/2015-03-31/functions/", name, "/aliases")
   query <- list()
   if (!missing(version)) {
-    if (version == "$LATEST") {
-      warning(
-        "The AWS API erroneously returns an empty list with version = $LATEST.",
-        "\n  You may want to try again without specifying a version."
-      )
-    }
+    warning(
+      "The AWS API erroneously returns an empty list when version is specified",
+      " if you only have one alias.",
+      "\n  You may want to try again without specifying a version."
+    )
     query[["FunctionVersion"]] <- version
   }
   if (!missing(marker)) {

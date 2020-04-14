@@ -7,7 +7,7 @@
 lambdaHTTP(
   verb = "GET",
   action,
-  query = list(),
+  query = NULL,
   headers = list(),
   body = NULL,
   verbose = getOption("verbose", FALSE),
@@ -23,35 +23,49 @@ lambdaHTTP(
 
 \item{action}{A character string specifying the API version and endpoint.}
 
-\item{query}{An optional named list containing query string parameters and their character values.}
+\item{query}{An optional named list containing query string parameters and
+their character values.}
 
 \item{headers}{A list of headers to pass to the HTTP request.}
 
 \item{body}{The HTTP request body.}
 
-\item{verbose}{A logical indicating whether to be verbose. Default is given by \code{options("verbose")}.}
+\item{verbose}{A logical indicating whether to be verbose. Default is given
+by \code{options("verbose")}.}
 
-\item{region}{A character string specifying an AWS region. See \code{\link[aws.signature]{locate_credentials}}.}
+\item{region}{A character string specifying an AWS region. See
+\code{\link[aws.signature]{locate_credentials}}.}
 
-\item{key}{A character string specifying an AWS Access Key. See \code{\link[aws.signature]{locate_credentials}}.}
+\item{key}{A character string specifying an AWS Access Key. See
+\code{\link[aws.signature]{locate_credentials}}.}
 
-\item{secret}{A character string specifying an AWS Secret Key. See \code{\link[aws.signature]{locate_credentials}}.}
+\item{secret}{A character string specifying an AWS Secret Key. See
+\code{\link[aws.signature]{locate_credentials}}.}
 
-\item{session_token}{Optionally, a character string specifying an AWS temporary Session Token to use in signing a request. See \code{\link[aws.signature]{locate_credentials}}.}
+\item{session_token}{Optionally, a character string specifying an AWS
+temporary Session Token to use in signing a request. See
+\code{\link[aws.signature]{locate_credentials}}.}
 
-\item{\dots}{Additional arguments passed to \code{\link[httr]{GET}} or another httr request function.}
+\item{\dots}{Additional arguments passed to \code{\link[httr]{GET}} or
+another httr request function.}
 }
 \value{
-If successful, a named list. Otherwise, a data structure of class \dQuote{aws-error} containing any error message(s) from AWS and information about the request attempt.
+If successful, a named list. Otherwise, a data structure of class
+  \dQuote{aws-error} containing any error message(s) from AWS and information
+  about the request attempt.
 }
 \description{
-This is the workhorse function to execute calls to the Lambda API.
+This is the workhorse function to execute calls to the Lambda
+  API.
 }
 \details{
-This function constructs and signs an AWS Lambda API request and returns the results thereof, or relevant debugging information in the case of error.
+This function constructs and signs an AWS Lambda API request and
+  returns the results thereof, or relevant debugging information in the case
+  of error.
 }
 \seealso{
-\code{\link{get_lambda_account}}, which works well as a hello world for the package
+\code{\link{get_lambda_account}}, which works well as a hello world
+  for the package
 }
 \author{
 Thomas J. Leeper

@@ -24,3 +24,16 @@ get_function_name.character <- function(x, ...) {
 get_function_name.aws_lambda_function <- function(x, ...) {
     x[["FunctionName"]]
 }
+
+#' Default value for `NULL`
+#'
+#' This infix function makes it easy to replace `NULL`s with a default
+#' value. It's inspired by the way that Ruby's or operation (`||`)
+#' works. Copied from the rlang package.
+#'
+#' @param x,y If `x` is NULL, will return `y`; otherwise returns `x`.
+#' @keywords internal
+#' @name op-null-default
+`%||%` <- function(x, y) {
+    if (is.null(x)) y else x
+}
