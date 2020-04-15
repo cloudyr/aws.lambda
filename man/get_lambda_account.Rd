@@ -17,6 +17,6 @@ Get account settings
 }
 \examples{
 \dontrun{
-  get_lambda_account()
+get_lambda_account()
 }
 }

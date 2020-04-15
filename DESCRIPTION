@@ -1,14 +1,21 @@
 Package: aws.lambda
 Type: Package
 Title: AWS Lambda Client Package
-Version: 0.1.6
-Date: 2017-07-01
-Authors@R: c(person("Thomas J.", "Leeper", role = c("aut"),
+Version: 0.2.0
+Authors@R: c(
+             person("Thomas J.", "Leeper", role = c("aut"),
                     email = "thosjleeper@gmail.com",
-                    comment = c(ORCID = "0000-0003-4097-6326")))
-Maintainer: ORPHANED
-Description: A simple client package for the Amazon Web Services ('AWS') Lambda 'API' <https://aws.amazon.com/lambda/>.
-License: GPL (>= 2)
+                    comment = c(ORCID = "0000-0003-4097-6326")),
+             person("Jon", "Harmon", role = c("ctb", "cre"),
+                    email = "jonthegeek@gmail.com",
+                    comment = c(ORCID = "0000-0003-4781-4346"))
+           )
+Description: A simple client package for the Amazon Web Services ('AWS') Lambda 
+    API <https://aws.amazon.com/lambda/>.
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.4)
+License: GPL-3
 Imports: 
     utils,
     httr,
@@ -21,4 +28,4 @@ Suggests:
     aws.iam
 URL: https://github.com/cloudyr/aws.lambda
 BugReports: https://github.com/cloudyr/aws.lambda/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0

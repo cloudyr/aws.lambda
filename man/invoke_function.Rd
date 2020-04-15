@@ -4,17 +4,26 @@
 \alias{invoke_function}
 \title{Invoke Lambda Function}
 \usage{
-invoke_function(name, qualifier, payload = NULL, type = c("RequestResponse",
-  "Event", "DryRun"), log = c("None", "Tail"), ...)
+invoke_function(
+  name,
+  qualifier,
+  payload = NULL,
+  type = c("RequestResponse", "Event", "DryRun"),
+  log = c("None", "Tail"),
+  ...
+)
 }
 \arguments{
 \item{name}{A character string specifying the function name (either a full ARN or a max 64-character string). For functions other than \code{create_function} this can also be an object of class \dQuote{aws_lambda_function}.}
 
 \item{qualifier}{Optionally, either a function version or alias. If omitted, information about the latest version is returned.}
 
-\item{payload}{Optionally, the JSON body to send to the function.}
+\item{payload}{Optionally, a list of parameters to send in the JSON body to
+the function.}
 
-\item{type}{A character string specifying one of: (1) \dQuote{Event} (asynchronous execution), (2) \dQuote{RequestResponse} (the default), or (3) \dQuote{DryRun} to test the function without executing it.}
+\item{type}{A character string specifying one of: (1) \dQuote{Event}
+(asynchronous execution), (2) \dQuote{RequestResponse} (the default), or
+(3) \dQuote{DryRun} to test the function without executing it.}
 
 \item{log}{A character string to control log response.}
 
