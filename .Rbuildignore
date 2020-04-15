@@ -11,3 +11,4 @@ knitreadme.sh
 ^\.Rproj\.user$
 ^\.github.?
 ^LICENSE\.md$
+^README\.Rmd$
