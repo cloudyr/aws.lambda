@@ -4,7 +4,7 @@
 #' @return A list.
 #' @examples
 #' \dontrun{
-#'   get_lambda_account()
+#' get_lambda_account()
 #' }
 #' @export
 get_lambda_account <- function(...) {

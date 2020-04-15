@@ -1,6 +1,6 @@
 print.aws_lambda_function <- function(x, ...) {
-    print(str(x))
-    return(invisible(x))
+  print(utils::str(x))
+  return(invisible(x))
 }
 
 #' @rdname get_function_name
@@ -10,19 +10,19 @@ print.aws_lambda_function <- function(x, ...) {
 #' @param \dots Additional arguments passed to methods
 #' @export
 get_function_name <- function(x, ...) {
-    UseMethod("get_function_name")
+  UseMethod("get_function_name")
 }
 
 #' @rdname get_function_name
 #' @export
 get_function_name.character <- function(x, ...) {
-    x
+  x
 }
 
 #' @rdname get_function_name
 #' @export
 get_function_name.aws_lambda_function <- function(x, ...) {
-    x[["FunctionName"]]
+  x[["FunctionName"]]
 }
 
 #' Default value for `NULL`
@@ -35,5 +35,5 @@ get_function_name.aws_lambda_function <- function(x, ...) {
 #' @keywords internal
 #' @name op-null-default
 `%||%` <- function(x, y) {
-    if (is.null(x)) y else x
+  if (is.null(x)) y else x
 }
