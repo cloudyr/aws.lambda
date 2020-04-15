@@ -1,7 +1,9 @@
 # aws.lambda 0.1.6.9000
 
-* Updated license to GPL-3.
 * New maintainer (@jonthegeek).
+* Updated license to GPL-3.
+* Deprecated `update_function()` in favor of `update_function_code()` and `update_function_config()`.
+* Deprecated `make_function_version()` in favor of `publish_function_version()`.
 
 # aws.lambda 0.1.6
 
