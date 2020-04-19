@@ -1,6 +1,7 @@
 on:
   issue_comment:
     types: [created]
+
 name: Commands
 jobs:
   document:
