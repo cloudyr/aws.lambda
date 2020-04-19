@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/aws.lambda)](https://CRAN.R-project.org/package=aws.lambda)
+[![R build status](https://github.com/cloudyr/aws.lambda/workflows/R-CMD-check/badge.svg)](https://github.com/cloudyr/aws.lambda/actions)
 <!-- badges: end -->
 
 **aws.lambda** is a client package for the [Amazon Web Services (AWS) Lambda API](https://aws.amazon.com/lambda/).

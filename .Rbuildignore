@@ -13,3 +13,4 @@ knitreadme.sh
 ^LICENSE\.md$
 ^README\.Rmd$
 ^cran-comments\.md$
+^\.github$
