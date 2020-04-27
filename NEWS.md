@@ -1,6 +1,7 @@
 # aws.lambda 0.2.0.9000
 
 * Refactored lambdaHTTP to simplify the call, toward a universal http caller for all aws.* packages. (@jonthegeek, #13)
+* Implemented github actions. (@mikekaminsky)
 
 # aws.lambda 0.2.0
 
