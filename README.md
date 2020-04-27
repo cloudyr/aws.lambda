@@ -7,6 +7,8 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/aws.lambda)](https://CRAN.R-project.org/package=aws.lambda)
+[![R build
+status](https://github.com/cloudyr/aws.lambda/workflows/R-CMD-check/badge.svg)](https://github.com/cloudyr/aws.lambda/actions)
 <!-- badges: end -->
 
 **aws.lambda** is a client package for the [Amazon Web Services (AWS)
@@ -120,14 +122,6 @@ invoke_function(func, payload = list(a = -5, b = 7))
 ``` r
 delete_function(func)
 ```
-
-## Contributing
-
-If you want to get involved, start by opening an issue. Once you're ready to start working on the code, fork the repository and submit a pull request. 
-
-If you are changing functionality or adding any new functionality, you _must_ add tests. 
-
-Make sure `R CMD check` passes before you submit the pull request for review.
 
 -----
 
