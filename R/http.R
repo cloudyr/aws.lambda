@@ -45,6 +45,19 @@ lambdaHTTP <- function(verb = "GET",
                        secret = NULL,
                        session_token = NULL,
                        ...) {
+  # Set things up for aws.signature.
+  host <- paste0("lambda.", region, ".amazonaws.com")
+
+  # aws.signature should do these things.
+  query <- if (length(query)) query else NULL
+  if (length(body)) {
+    if (is.list(body)) {
+      body <- jsonlite::toJSON(body, auto_unbox = TRUE)
+    }
+  } else {
+    body <- NULL
+  }
+
   # locate and validate credentials
   credentials <- aws.signature::locate_credentials(
     key = key, secret = secret, session_token = session_token,
@@ -55,22 +68,11 @@ lambdaHTTP <- function(verb = "GET",
   session_token <- credentials[["session_token"]]
   region <- credentials[["region"]]
 
-  # generate request signature
   d_timestamp <- format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC")
-  url <- paste0("https://lambda.", region, ".amazonaws.com", action)
-
-  if (length(body)) {
-    if (is.list(body)) {
-      body <- jsonlite::toJSON(body, auto_unbox = TRUE)
-    }
-  } else {
-    body <- NULL
-  }
-
-  query <- if (length(query)) query else NULL
-
-  headers[["host"]] <- paste0("lambda.", region, ".amazonaws.com")
+  headers[["host"]] <- host
   headers[["x-amz-date"]] <- d_timestamp
+
+  # generate request signature
   Sig <- aws.signature::signature_v4_auth(
     datetime = d_timestamp,
     region = region,
@@ -92,24 +94,13 @@ lambdaHTTP <- function(verb = "GET",
   }
   H <- do.call(httr::add_headers, headers)
 
-  # execute request
-  if (verb == "GET") {
-    r <- httr::GET(url, H, query = query, ...)
-  } else if (verb == "DELETE") {
-    r <- httr::DELETE(url, H, query = query, ...)
-  } else if (verb == "PUT") {
-    if (is.null(body)) {
-      r <- httr::PUT(url, H, query = query, ...)
-    } else {
-      r <- httr::PUT(url, H, query = query, body = body, encode = "json", ...)
-    }
-  } else if (verb == "POST") {
-    if (is.null(body)) {
-      r <- httr::POST(url, H, query = query, ...)
-    } else {
-      r <- httr::POST(url, H, query = query, body = body, encode = "json", ...)
-    }
-  }
+  url <- paste0("https://", host, action)
+
+  encode <- if (is.null(body)) NULL else "json"
+
+  r <- httr::VERB(
+    verb = verb, url = url, config = H, body = body, encode = encode, ...
+  )
 
   if (httr::http_error(r)) {
     h <- httr::headers(r)
