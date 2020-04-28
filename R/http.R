@@ -45,8 +45,6 @@ lambdaHTTP <- function(verb = "GET",
                        secret = NULL,
                        session_token = NULL,
                        ...) {
-  # aws.signature should do these things.
-  query <- if (length(query)) query else NULL
   if (length(body)) {
     if (is.list(body)) {
       body <- jsonlite::toJSON(body, auto_unbox = TRUE)
@@ -54,6 +52,7 @@ lambdaHTTP <- function(verb = "GET",
   } else {
     body <- NULL
   }
+  query <- if (length(query)) query else NULL
 
   # Set things up for aws.signature.
   headers[["host"]] <- paste0("lambda.", region, ".amazonaws.com")
@@ -83,9 +82,10 @@ lambdaHTTP <- function(verb = "GET",
   r <- httr::VERB(
     verb = verb,
     url = paste0("https://", headers[["host"]], action),
-    config = httr::add_headers(.headers = headers),
+    config = do.call(httr::add_headers, headers),
     body = body,
     encode = if (is.null(body)) NULL else "json",
+    query = query,
     ...
   )
 

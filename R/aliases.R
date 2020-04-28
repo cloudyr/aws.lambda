@@ -97,6 +97,7 @@ list_function_aliases <- function(name, version, marker, n, ...) {
   if (!missing(n)) {
     query[["MaxItems"]] <- n
   }
-  r <- lambdaHTTP(verb = "GET", action = act, query = query, ...)
-  return(r)
+  return(
+    lambdaHTTP(verb = "GET", action = act, query = query, ...)
+  )
 }
