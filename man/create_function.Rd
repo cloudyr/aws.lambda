@@ -20,6 +20,7 @@ create_function(
   timeout = 3L,
   description,
   layers,
+  memory_size = 128L,
   ...
 )
 
@@ -81,6 +82,13 @@ seconds.}
 
 \item{description}{Optionally, a max 256-character description of the
 function for your own use.}
+
+\item{layers}{A character vector of pre-built layers to be used by your function
+when runtime is \code{provided}.}
+
+\item{memory_size}{An integer specifying the amount of RAM that's allocated to the
+function. Unenforced minimum value of 128, maximum value of 3008 (will be
+enforced on the API side).}
 
 \item{\dots}{Additional arguments passed to \code{\link{lambdaHTTP}}.}
 }

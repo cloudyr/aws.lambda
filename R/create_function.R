@@ -21,6 +21,11 @@
 #'   function.
 #' @param timeout An integer specifying the timeout for the function, in
 #'   seconds.
+#' @param layers A character vector of pre-built layers to be used by your function
+#'   when runtime is \code{provided}.
+#' @param memory_size An integer specifying the amount of RAM that's allocated to the
+#'   function. Unenforced minimum value of 128, maximum value of 3008 (will be
+#'   enforced on the API side).
 #' @template dots
 #' @return A list of class \dQuote{aws_lambda_function}.
 #' @details \code{create_function} creates a new function from a deployment
@@ -64,8 +69,6 @@
 #' }
 #' @seealso \code{\link{invoke_function}}, \code{\link{create_function_alias}},
 #'   \code{\link{list_functions}}, \code{\link{delete_function}}
-#' @importFrom base64enc base64encode
-#' @importFrom utils zip
 #' @export
 create_function <- function(name,
                             func,
