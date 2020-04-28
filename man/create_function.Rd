@@ -19,6 +19,7 @@ create_function(
     "ruby2.5", "provided"),
   timeout = 3L,
   description,
+  layers,
   ...
 )
 

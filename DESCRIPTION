@@ -25,7 +25,8 @@ Imports:
 Suggests: 
     testthat,
     aws.s3,
-    aws.iam
+    aws.iam,
+    mockery
 URL: https://github.com/cloudyr/aws.lambda
 BugReports: https://github.com/cloudyr/aws.lambda/issues
 RoxygenNote: 7.1.0

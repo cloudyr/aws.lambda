@@ -2,6 +2,7 @@
 
 * Refactored lambdaHTTP to simplify the call, toward a universal http caller for all aws.* packages. (@jonthegeek, #13)
 * Implemented github actions. (@mikekaminsky)
+* Added tests. (@mikekaminsky and @jonthegeek)
 
 # aws.lambda 0.2.0
 
