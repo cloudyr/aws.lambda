@@ -106,9 +106,6 @@ lambdaHTTP <- function(verb = "GET",
     httr::stop_for_status(r)
   }
 
-  # I removed the "aws_lambda_function" class. It makes unnecessary noise,
-  # particularly since not *every* result should have that class. Consider
-  # readding. Move this to an issue.
   return(
     httr::content(r, "parsed", encoding = "UTF-8")
   )

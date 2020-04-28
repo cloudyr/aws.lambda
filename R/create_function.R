@@ -114,7 +114,12 @@ create_function <- function(name,
   if (!missing(memory_size)) {
     b[["MemorySize"]] = memory_size
   }
-  return(lambdaHTTP(verb = "POST", action = act, body = b, ...))
+  return(
+    structure(
+      lambdaHTTP(verb = "POST", action = act, body = b, ...),
+      class = "aws_lambda_function"
+    )
+  )
 }
 
 .function_code_body <- function(func) {

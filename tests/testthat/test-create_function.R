@@ -21,25 +21,28 @@ test_that("Can create a function", {
     timeout = 12L,
     description = "A function description"
   )
-  expected_result <- list(
-    verb = "POST",
-    action = "/2015-03-31/functions",
-    body = list(
-      Code = list(
-        S3Bucket = "fake_bucket",
-        S3Key = "for_testing"
-      ),
-      FunctionName = "matrix",
-      Handler = "matrix.get_col",
-      Role = role,
-      Runtime = "provided",
-      Description = "A function description",
-      Timeout = 12L,
-      Layers = list(
-        "arn:aws:lambda:us-east-1:131329294410:layer:r-runtime-3_6_0:13",
-        "arn:aws:lambda:us-east-1:131329294410:layer:r-recommended-3_6_0:13"
+  expected_result <- structure(
+    list(
+      verb = "POST",
+      action = "/2015-03-31/functions",
+      body = list(
+        Code = list(
+          S3Bucket = "fake_bucket",
+          S3Key = "for_testing"
+        ),
+        FunctionName = "matrix",
+        Handler = "matrix.get_col",
+        Role = role,
+        Runtime = "provided",
+        Description = "A function description",
+        Timeout = 12L,
+        Layers = list(
+          "arn:aws:lambda:us-east-1:131329294410:layer:r-runtime-3_6_0:13",
+          "arn:aws:lambda:us-east-1:131329294410:layer:r-recommended-3_6_0:13"
+        )
       )
-    )
+    ),
+    class = "aws_lambda_function"
   )
   expect_identical(test_result, expected_result)
 
