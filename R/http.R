@@ -79,14 +79,14 @@ lambdaHTTP <- function(verb = "GET",
   if (!is.null(session_token) && session_token != "") {
     headers[["x-amz-security-token"]] <- session_token
   }
-  H <- do.call(httr::add_headers, headers)
-
-  url <- paste0("https://", headers[["host"]], action)
-
-  encode <- if (is.null(body)) NULL else "json"
 
   r <- httr::VERB(
-    verb = verb, url = url, config = H, body = body, encode = encode, ...
+    verb = verb,
+    url = paste0("https://", headers[["host"]], action),
+    config = httr::add_headers(.headers = headers),
+    body = body,
+    encode = if (is.null(body)) NULL else "json",
+    ...
   )
 
   if (httr::http_error(r)) {

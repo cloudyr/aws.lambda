@@ -8,6 +8,11 @@
 #' }
 #' @export
 get_lambda_account <- function(...) {
-  act <- paste0("/2016-08-19/account-settings")
-  lambdaHTTP(verb = "GET", action = act, ...)
+  act <- "/2016-08-19/account-settings"
+  return(
+    structure(
+      lambdaHTTP(verb = "GET", action = act, ...),
+      class = "aws_lambda_account"
+    )
+  )
 }
