@@ -73,7 +73,7 @@ lambdaHTTP <- function(verb = "GET",
     session_token = session_token,
     verbose = verbose
   )
-  headers[["x-amz-content-sha256"]] <- Sig$BodyHash
+  headers[["x-amz-content-sha256"]] <- Sig[["BodyHash"]]
   headers[["Authorization"]] <- Sig[["SignatureHeader"]]
   if (!is.null(session_token) && session_token != "") {
     headers[["x-amz-security-token"]] <- session_token
