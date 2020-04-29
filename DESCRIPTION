@@ -26,7 +26,9 @@ Suggests:
     testthat,
     aws.s3,
     aws.iam,
-    mockery
+    mockery,
+    vcr,
+    here
 URL: https://github.com/cloudyr/aws.lambda
 BugReports: https://github.com/cloudyr/aws.lambda/issues
 RoxygenNote: 7.1.0

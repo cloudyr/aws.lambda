@@ -8,6 +8,7 @@ test_that("lambdaHTTP works", {
 
   # For these tests, we're still using mocks, but something closer to the real
   # response.
+  library(vcr)
   vcr::vcr_configure(
     dir = here::here("tests", "testthat"),
     allow_unused_http_interactions = FALSE,
