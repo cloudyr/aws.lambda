@@ -45,11 +45,6 @@ lambdaHTTP <- function(verb = "GET",
                        secret = NULL,
                        session_token = NULL,
                        ...) {
-  # Set things up for aws.signature.
-  host <- paste0("lambda.", region, ".amazonaws.com")
-
-  # aws.signature should do these things.
-  query <- if (length(query)) query else NULL
   if (length(body)) {
     if (is.list(body)) {
       body <- jsonlite::toJSON(body, auto_unbox = TRUE)
@@ -57,24 +52,15 @@ lambdaHTTP <- function(verb = "GET",
   } else {
     body <- NULL
   }
+  query <- if (length(query)) query else NULL
 
-  # locate and validate credentials
-  credentials <- aws.signature::locate_credentials(
-    key = key, secret = secret, session_token = session_token,
-    region = region, verbose = verbose
-  )
-  key <- credentials[["key"]]
-  secret <- credentials[["secret"]]
-  session_token <- credentials[["session_token"]]
-  region <- credentials[["region"]]
-
-  d_timestamp <- format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC")
-  headers[["host"]] <- host
-  headers[["x-amz-date"]] <- d_timestamp
+  # Set things up for aws.signature.
+  headers[["host"]] <- paste0("lambda.", region, ".amazonaws.com")
+  headers[["x-amz-date"]] <- format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC")
 
   # generate request signature
   Sig <- aws.signature::signature_v4_auth(
-    datetime = d_timestamp,
+    datetime = headers[["x-amz-date"]],
     region = region,
     service = "lambda",
     verb = verb,
@@ -87,19 +73,20 @@ lambdaHTTP <- function(verb = "GET",
     session_token = session_token,
     verbose = verbose
   )
-  headers[["x-amz-content-sha256"]] <- Sig$BodyHash
+  headers[["x-amz-content-sha256"]] <- Sig[["BodyHash"]]
   headers[["Authorization"]] <- Sig[["SignatureHeader"]]
   if (!is.null(session_token) && session_token != "") {
     headers[["x-amz-security-token"]] <- session_token
   }
-  H <- do.call(httr::add_headers, headers)
-
-  url <- paste0("https://", host, action)
-
-  encode <- if (is.null(body)) NULL else "json"
 
   r <- httr::VERB(
-    verb = verb, url = url, config = H, body = body, encode = encode, ...
+    verb = verb,
+    url = paste0("https://", headers[["host"]], action),
+    config = do.call(httr::add_headers, headers),
+    body = body,
+    encode = if (is.null(body)) NULL else "json",
+    query = query,
+    ...
   )
 
   if (httr::http_error(r)) {
@@ -118,5 +105,8 @@ lambdaHTTP <- function(verb = "GET",
     print(out)
     httr::stop_for_status(r)
   }
-  httr::content(r, "parsed", encoding = "UTF-8")
+
+  return(
+    httr::content(r, "parsed", encoding = "UTF-8")
+  )
 }

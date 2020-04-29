@@ -21,6 +21,11 @@
 #'   function.
 #' @param timeout An integer specifying the timeout for the function, in
 #'   seconds.
+#' @param layers A character vector of pre-built layers to be used by your function
+#'   when runtime is \code{provided}.
+#' @param memory_size An integer specifying the amount of RAM that's allocated to the
+#'   function. Unenforced minimum value of 128, maximum value of 3008 (will be
+#'   enforced on the API side).
 #' @template dots
 #' @return A list of class \dQuote{aws_lambda_function}.
 #' @details \code{create_function} creates a new function from a deployment
@@ -64,8 +69,6 @@
 #' }
 #' @seealso \code{\link{invoke_function}}, \code{\link{create_function_alias}},
 #'   \code{\link{list_functions}}, \code{\link{delete_function}}
-#' @importFrom base64enc base64encode
-#' @importFrom utils zip
 #' @export
 create_function <- function(name,
                             func,
@@ -89,31 +92,12 @@ create_function <- function(name,
                             ),
                             timeout = 3L,
                             description,
+                            layers,
+                            memory_size = 128L,
                             ...) {
-  act <- paste0("/2015-03-31/functions")
-  b <- list(Code = list())
-  if (grepl("^s3://", func)) {
-    x <- substring(func, 6, nchar(func))
-    b[["Code"]][["S3Bucket"]] <- substring(x, 1, regexpr("/", x) - 1L)
-    b[["Code"]][["S3Key"]] <- substring(x, regexpr("/", x) + 1L, nchar(x))
-  } else {
-    if (!file.exists(func)) {
-      stop(sprintf("File '%s' not found!", func))
-    }
-    if (endsWith(func, "zip")) {
-      b[["Code"]] <- list(ZipFile = base64enc::base64encode(func))
-    } else {
-      wd <- getwd()
-      on.exit(setwd(wd))
-      file.copy(from = func, to = tempdir(), overwrite = TRUE)
-      tmp <- tempfile(fileext = ".zip")
-      on.exit(unlink(tmp), add = TRUE)
-      setwd(tempdir())
-      utils::zip(zipfile = tmp, files = basename(func))
-      setwd(wd)
-      b[["Code"]] <- list(ZipFile = base64enc::base64encode(tmp))
-    }
-  }
+  act <- "/2015-03-31/functions"
+  b <- list()
+  b[["Code"]] <- .function_code_body(func)
   b[["FunctionName"]] <- name
   b[["Handler"]] <- handler
   b[["Role"]] <- role
@@ -124,8 +108,48 @@ create_function <- function(name,
   if (timeout != 3) {
     b[["Timeout"]] <- timeout
   }
-  r <- lambdaHTTP(verb = "POST", action = act, body = b, ...)
-  structure(r, class = "aws_lambda_function")
+  if (!missing(layers)) {
+    b[["Layers"]] <- as.list(layers)
+  }
+  if (!missing(memory_size)) {
+    b[["MemorySize"]] = memory_size
+  }
+  return(
+    structure(
+      lambdaHTTP(verb = "POST", action = act, body = b, ...),
+      class = "aws_lambda_function"
+    )
+  )
+}
+
+.function_code_body <- function(func) {
+  if (grepl("^s3://", func)) {
+    x <- substring(func, 6, nchar(func))
+    to_return <- list(
+      S3Bucket = substring(x, 1, regexpr("/", x) - 1L),
+      S3Key = substring(x, regexpr("/", x) + 1L, nchar(x))
+    )
+  } else {
+    if (!file.exists(func)) {
+      stop(sprintf("File '%s' not found!", func))
+    }
+    # For now, I do not test any of these due to inconsistency in the result.
+    # Will add mocks soon.
+    if (endsWith(func, "zip")) { # nocov start
+      to_return <- list(ZipFile = base64enc::base64encode(func))
+    } else {
+      wd <- getwd()
+      on.exit(setwd(wd))
+      file.copy(from = func, to = tempdir(), overwrite = TRUE)
+      tmp <- tempfile(fileext = ".zip")
+      on.exit(unlink(tmp), add = TRUE)
+      setwd(tempdir())
+      utils::zip(zipfile = tmp, files = basename(func))
+      setwd(wd)
+      to_return <- list(ZipFile = base64enc::base64encode(tmp))
+    } # nocov end
+  }
+  return(to_return)
 }
 
 # update_function_code and update_function_config were smushed into one
@@ -136,31 +160,8 @@ create_function <- function(name,
 update_function_code <- function(name, func, ...) {
   name <- get_function_name(name)
   act <- paste0("/2015-03-31/functions/", name, "/code")
-  b <- list()
-  if (grepl("^s3://", func)) {
-    x <- substring(func, 6, nchar(func))
-    b[["S3Bucket"]] <- substring(x, 1, regexpr("/", x) - 1L)
-    b[["S3Key"]] <- substring(x, regexpr("/", x) + 1L, nchar(x))
-  } else {
-    if (!file.exists(func)) {
-      stop(sprintf("File '%s' not found!", func))
-    }
-    if (endsWith(func, "zip")) {
-      b[["ZipFile"]] <- base64enc::base64encode(func)
-    } else {
-      wd <- getwd()
-      on.exit(setwd(wd))
-      file.copy(from = func, to = tempdir(), overwrite = TRUE)
-      tmp <- tempfile(fileext = ".zip")
-      on.exit(unlink(tmp), add = TRUE)
-      setwd(tempdir())
-      utils::zip(zipfile = tmp, files = basename(func))
-      setwd(wd)
-      b[["ZipFile"]] <- base64enc::base64encode(tmp)
-    }
-  }
-  r <- lambdaHTTP(verb = "PUT", action = act, body = b, ...)
-  structure(r, class = "aws_lambda_function")
+  b <- .function_code_body(func)
+  return(lambdaHTTP(verb = "PUT", action = act, body = b, ...))
 }
 
 #' @rdname create_function
@@ -187,6 +188,7 @@ update_function_config <- function(name,
                                    ),
                                    timeout = 3L,
                                    ...) {
+  name <- get_function_name(name)
   act <- paste0("/2015-03-31/functions/", name, "/configuration")
   b <- list()
   if (!missing(description)) {
@@ -204,13 +206,12 @@ update_function_config <- function(name,
   if (!missing(runtime) && timeout != 3) {
     b[["Timeout"]] <- timeout
   }
-  r <- lambdaHTTP(verb = "PUT", action = act, body = b, ...)
-  structure(r, class = "aws_lambda_function")
+  return(lambdaHTTP(verb = "PUT", action = act, body = b, ...))
 }
 
 #' @rdname create_function
 #' @export
-update_function <- function(name,
+update_function <- function(name, # nocov start
                             func,
                             description,
                             handler,
@@ -249,7 +250,7 @@ update_function <- function(name,
     update_function_code(name, func, ...)
   } else {
     .Deprecated(
-      new = "update_function_code",
+      new = "update_function_config",
       package = "aws.lambda",
       msg = paste(
         "update_function has been replaced by update_function_code and",
@@ -264,7 +265,7 @@ update_function <- function(name,
       name, description, handler, role, runtime, timeout, ...
     )
   }
-}
+} # nocov end
 
 #' @rdname create_function
 #' @export
@@ -275,13 +276,12 @@ publish_function_version <- function(name, description, ...) {
   if (!missing(description)) {
     b[["Description"]] <- description
   }
-  r <- lambdaHTTP(verb = "POST", action = act, body = b, ...)
-  return(r)
+  return(lambdaHTTP(verb = "POST", action = act, body = b, ...))
 }
 
 #' @rdname create_function
 #' @export
-make_function_version <- function(name, description, ...) {
+make_function_version <- function(name, description, ...) { # nocov start
   .Deprecated(
     new = "publish_function_version",
     package = "aws.lambda",
@@ -293,4 +293,4 @@ make_function_version <- function(name, description, ...) {
     )
   )
   publish_function_version(name = name, description = description, ...)
-}
+} # nocov end
