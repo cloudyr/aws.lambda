@@ -23,12 +23,11 @@ Imports:
     aws.signature (>= 0.3.4),
     base64enc
 Suggests: 
-    testthat,
-    aws.s3,
     aws.iam,
+    aws.s3,
+    httptest,
     mockery,
-    vcr,
-    here
+    testthat
 URL: https://github.com/cloudyr/aws.lambda
 BugReports: https://github.com/cloudyr/aws.lambda/issues
 RoxygenNote: 7.1.0
